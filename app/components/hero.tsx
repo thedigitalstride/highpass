@@ -40,7 +40,7 @@ export default function Hero() {
         className="absolute inset-0 pointer-events-none"
       >
         <Image
-          src="/andy-coaching-table copy.webp"
+          src="/coaching-session-sitting.webp"
           alt="Professional Coaching Session"
           fill
           className="object-cover"
