@@ -1,4 +1,4 @@
-# Coaching Site Implementation Summary
+# Coaching Site Implementation Summary.
 
 ## Project Complete ✓
 
