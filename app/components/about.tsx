@@ -31,7 +31,7 @@ export default function About() {
               className="relative rounded-2xl overflow-hidden shadow-2xl"
             >
               {/* Image Placeholder */}
-              <div className="aspect-[3/4] bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+              <div className="aspect-3/4 bg-linear-to-br from-primary to-secondary flex items-center justify-center">
                 <div className="text-center p-8">
                   <svg
                     className="w-32 h-32 mx-auto text-white/40 mb-4"
@@ -108,7 +108,7 @@ export default function About() {
             >
               <p className="text-lg">
                 With over 15 years of experience in personal and professional development,
-                I've dedicated my career to helping individuals unlock their true potential
+                I&apos;ve dedicated my career to helping individuals unlock their true potential
                 and achieve extraordinary results.
               </p>
               
@@ -119,8 +119,8 @@ export default function About() {
               </p>
               
               <p className="text-lg">
-                Whether you're navigating a career transition, seeking work-life balance,
-                or striving to reach ambitious goals, I'm here to support you every step
+                Whether you&apos;re navigating a career transition, seeking work-life balance,
+                or striving to reach ambitious goals, I&apos;m here to support you every step
                 of the way.
               </p>
             </motion.div>

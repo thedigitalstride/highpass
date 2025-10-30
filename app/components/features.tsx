@@ -63,7 +63,7 @@ export default function Features() {
               <div className="flex flex-col space-y-4">
                 {/* Number */}
                 <div className="flex items-start space-x-6">
-                  <div className="flex-shrink-0 w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center group-hover:bg-secondary group-hover:scale-110 transition-all duration-300">
+                  <div className="shrink-0 w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center group-hover:bg-secondary group-hover:scale-110 transition-all duration-300">
                     <span className="text-2xl font-bold text-secondary group-hover:text-white transition-colors duration-300">
                       {feature.number}
                     </span>
