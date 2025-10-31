@@ -1,0 +1,13 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#b5bab7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9ea39f;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#grad5)"/>
+  <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="48" fill="white" text-anchor="middle" dominant-baseline="middle">Product Image 5</text>
+  <circle cx="300" cy="250" r="85" fill="rgba(255,255,255,0.2)"/>
+  <rect x="470" y="370" width="110" height="110" fill="rgba(255,255,255,0.15)" rx="12"/>
+</svg>
+

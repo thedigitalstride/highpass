@@ -198,16 +198,6 @@ export default function Hero() {
             >
               Start Your Journey
             </Button>
-            <Button 
-              variant="outline" 
-              size="lg"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollTo('#about');
-              }}
-            >
-              Learn More
-            </Button>
               </motion.div>
             </motion.div>
           </div>

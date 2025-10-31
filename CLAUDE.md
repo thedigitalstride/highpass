@@ -10,11 +10,11 @@ This is a modern, mobile-first professional coaching website built with Next.js 
 
 ### Development
 ```bash
-npm install           # Install dependencies (use npm, not pnpm despite pnpm-lock.yaml presence)
-npm run dev          # Start development server at http://localhost:3000
-npm run build        # Build for production
-npm start            # Start production server
-npm run lint         # Run ESLint on codebase
+pnpm install         # Install dependencies (this project uses pnpm)
+pnpm dev             # Start development server at http://localhost:3000
+pnpm build           # Build for production
+pnpm start           # Start production server
+pnpm lint            # Run ESLint on codebase
 ```
 
 ### Database
