@@ -5,11 +5,15 @@ import { motion, useMotionValue, animate } from 'framer-motion';
 import Image from 'next/image';
 import type { CarouselImage } from './content';
 
-interface FlickerCarouselProps {
+export interface FlickerCarouselProps {
   images: CarouselImage[];
+  showProgressIndicator?: boolean;
 }
 
-export default function FlickerCarousel({ images }: FlickerCarouselProps) {
+export default function FlickerCarousel({
+  images,
+  showProgressIndicator = false
+}: FlickerCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const viewportRef = useRef<HTMLDivElement>(null);
   const [containerPadding, setContainerPadding] = useState(0);
@@ -226,7 +230,7 @@ export default function FlickerCarousel({ images }: FlickerCarouselProps) {
       </div>
 
       {/* Progress indicator */}
-      {images.length > 1 && (
+      {showProgressIndicator && images.length > 1 && (
         <div className="flex justify-center gap-2 mt-6">
           {images.map((_, index) => (
             <button
