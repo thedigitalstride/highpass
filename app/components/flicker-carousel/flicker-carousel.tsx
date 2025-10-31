@@ -3,14 +3,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, animate } from 'framer-motion';
 import Image from 'next/image';
+import type { CarouselImage } from './content';
 
 interface FlickerCarouselProps {
-  images: {
-    src: string;
-    alt: string;
-    width: number;
-    height: number;
-  }[];
+  images: CarouselImage[];
 }
 
 export default function FlickerCarousel({ images }: FlickerCarouselProps) {
