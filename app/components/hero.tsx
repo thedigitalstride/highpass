@@ -7,14 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Button from './ui/button';
 import { useLenisScroll } from './smooth-scroll-provider';
-
-const navLinks = [
-  { href: '#home', label: 'Home' },
-  { href: '#about', label: 'About' },
-  { href: '#services', label: 'Services' },
-  { href: '#testimonials', label: 'Testimonials' },
-  { href: '#contact', label: 'Contact' },
-];
+import { navLinks, navigationConfig } from './navigation';
 
 export default function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -82,10 +75,10 @@ export default function Hero() {
             className="hidden md:inline-flex text-lg"
             onClick={(e) => {
               e.preventDefault();
-              scrollTo('#contact');
+              scrollTo(navigationConfig.ctaHref);
             }}
           >
-            Get Started
+            {navigationConfig.ctaText}
           </Button>
 
           {/* Mobile Menu Button */}
@@ -139,14 +132,14 @@ export default function Hero() {
                 <Button 
                   variant="secondary" 
                   size="md" 
-                  className="w-full" 
+                  className="w-full"
                   onClick={(e) => {
                     e.preventDefault();
-                    scrollTo('#contact');
+                    scrollTo(navigationConfig.ctaHref);
                     setIsOpen(false);
                   }}
                 >
-                  Get Started
+                  {navigationConfig.ctaText}
                 </Button>
               </div>
             </motion.div>
@@ -161,7 +154,7 @@ export default function Hero() {
           <div className="container mx-auto px-4">
             <motion.div 
               style={{ y: yHeadline }}
-              className="w-full lg:w-2/3 space-y-8 text-center lg:text-left z-10 mx-auto lg:mx-0"
+              className="w-full md:w-3/4 space-y-8 text-center lg:text-left z-10 mx-auto lg:mx-0"
             >
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}

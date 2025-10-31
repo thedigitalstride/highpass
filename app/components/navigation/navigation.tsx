@@ -3,16 +3,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import Button from './ui/button';
-import { useLenisScroll } from './smooth-scroll-provider';
-
-const navLinks = [
-  { href: '#home', label: 'Home' },
-  { href: '#about', label: 'About' },
-  { href: '#services', label: 'Services' },
-  { href: '#testimonials', label: 'Testimonials' },
-  { href: '#contact', label: 'Contact' },
-];
+import Button from '../ui/button';
+import { useLenisScroll } from '../smooth-scroll-provider';
+import { navLinks, navigationConfig } from './content';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +16,7 @@ export default function Navigation() {
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="text-2xl font-semibold text-white hover:text-secondary-foreground transition-colors">
-          HIGHPASS
+          {navigationConfig.logo}
         </Link>
 
         {/* Centered Navigation */}
@@ -44,16 +37,16 @@ export default function Navigation() {
         </div>
 
         {/* CTA Button on Right */}
-        <Button 
-          variant="secondary" 
-          size="md" 
+        <Button
+          variant="secondary"
+          size="md"
           className="text-lg"
           onClick={(e) => {
             e.preventDefault();
-            scrollTo('#contact');
+            scrollTo(navigationConfig.ctaHref);
           }}
         >
-          Get Started
+          {navigationConfig.ctaText}
         </Button>
 
         {/* Mobile Menu Button */}
@@ -104,17 +97,17 @@ export default function Navigation() {
                   {link.label}
                 </button>
               ))}
-              <Button 
-                variant="secondary" 
-                size="md" 
-                className="w-full" 
+              <Button
+                variant="secondary"
+                size="md"
+                className="w-full"
                 onClick={(e) => {
                   e.preventDefault();
-                  scrollTo('#contact');
+                  scrollTo(navigationConfig.ctaHref);
                   setIsOpen(false);
                 }}
               >
-                Get Started
+                {navigationConfig.ctaText}
               </Button>
             </div>
           </motion.div>
