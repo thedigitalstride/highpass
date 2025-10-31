@@ -17,45 +17,62 @@ export default function FlickerCarousel({ images }: FlickerCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const viewportRef = useRef<HTMLDivElement>(null);
   const [containerPadding, setContainerPadding] = useState(0);
-  const [containerWidth, setContainerWidth] = useState(0);
+  const [viewportWidth, setViewportWidth] = useState(0);
   const [slideWidth, setSlideWidth] = useState(400);
   const x = useMotionValue(0);
   const gap = 24;
 
-  // Calculate slide width and container measurements
+  // Calculate slide width and container padding for alignment
   useEffect(() => {
     const updateSizes = () => {
       const viewportW = window.innerWidth;
-      
-      // Calculate padding based on Tailwind's container responsive rules
+
+      // Calculate container padding to match .container CSS exactly
       let padding: number;
-      if (viewportW >= 1280) { // xl
+      let maxWidth: number | null = null;
+
+      if (viewportW >= 1536) { // 2xl
+        maxWidth = 1536;
+        padding = 16; // 1rem (note: padding doesn't change at 2xl)
+      } else if (viewportW >= 1280) { // xl
+        maxWidth = 1280;
         padding = 32; // 2rem
       } else if (viewportW >= 1024) { // lg
+        maxWidth = 1024;
         padding = 32; // 2rem
+      } else if (viewportW >= 768) { // md
+        maxWidth = 768;
+        padding = 24; // 1.5rem (inherited from sm)
       } else if (viewportW >= 640) { // sm
+        maxWidth = 640;
         padding = 24; // 1.5rem
-      } else {
+      } else { // mobile (< 640px)
+        maxWidth = null; // No max-width on mobile
         padding = 16; // 1rem
       }
-      
-      const width = viewportW - (padding * 2);
-      
-      setContainerPadding(padding);
-      setContainerWidth(width);
-      
-      // Calculate slide width
+
+      // Calculate actual container padding
+      // If viewport is wider than max-width, container is centered with auto margins
+      const actualPadding = maxWidth && viewportW > maxWidth
+        ? (viewportW - maxWidth) / 2 + padding  // centered container: margin + padding
+        : padding; // full-width container: just padding
+
+      setContainerPadding(actualPadding);
+      setViewportWidth(viewportW);
+
+      // Calculate slide width based on viewport width
+      // Must subtract padding from BOTH sides to get available container width
       let calculatedWidth: number;
       if (viewportW < 768) {
         // Mobile: show 1.5 slides
-        calculatedWidth = (width - (gap * 0.5)) / 1.5;
+        calculatedWidth = (viewportW - (actualPadding * 2) - (gap * 0.5)) / 1.5;
       } else {
         // Desktop/Tablet: show 2.5 slides
-        calculatedWidth = (width - (gap * 1.5)) / 2.5;
+        calculatedWidth = (viewportW - (actualPadding * 2) - (gap * 1.5)) / 2.5;
       }
       setSlideWidth(calculatedWidth);
     };
-    
+
     updateSizes();
     window.addEventListener('resize', updateSizes);
     return () => window.removeEventListener('resize', updateSizes);
@@ -63,10 +80,10 @@ export default function FlickerCarousel({ images }: FlickerCarouselProps) {
 
   const slideWidthWithGap = slideWidth + gap;
 
-  // Calculate max scroll in pixels
-  // Use containerWidth if available, otherwise fallback to a reasonable default
+  // Calculate max scroll so last image stops at container's right edge
+  // Subtract padding from BOTH sides to get true container width
   const totalWidth = (slideWidth * images.length) + (gap * (images.length - 1));
-  const visibleWidth = containerWidth > 0 ? containerWidth : 1200;
+  const visibleWidth = viewportWidth - (containerPadding * 2);
   const maxScroll = Math.max(0, totalWidth - visibleWidth);
 
   // Handle drag end
@@ -163,31 +180,31 @@ export default function FlickerCarousel({ images }: FlickerCarouselProps) {
   };
 
   return (
-    <div 
-      ref={viewportRef} 
-      className="relative w-full overflow-visible cursor-grab active:cursor-grabbing"
-      style={{
-        paddingLeft: `${containerPadding}px`,
-        paddingRight: `${containerPadding}px`,
-      }}
-      role="region"
-      aria-label="Image carousel"
-      tabIndex={0}
-    >
-      <motion.div
-        className="flex"
+    <div className="relative w-screen">
+      <div
+        ref={viewportRef}
+        className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing"
         style={{
-          x,
-          gap: `${gap}px`,
+          paddingLeft: `${containerPadding}px`,
         }}
-        drag="x"
-        dragConstraints={dragConstraints}
-        dragElastic={0.02}
-        dragMomentum={false}
-        dragTransition={{ bounceStiffness: 400, bounceDamping: 40, power: 0.1 }}
-        onDragEnd={handleDragEnd}
-        whileTap={{ cursor: "grabbing" }}
+        role="region"
+        aria-label="Image carousel"
+        tabIndex={0}
       >
+        <motion.div
+          className="flex"
+          style={{
+            x,
+            gap: `${gap}px`,
+          }}
+          drag="x"
+          dragConstraints={dragConstraints}
+          dragElastic={0.02}
+          dragMomentum={false}
+          dragTransition={{ bounceStiffness: 400, bounceDamping: 40, power: 0.1 }}
+          onDragEnd={handleDragEnd}
+          whileTap={{ cursor: "grabbing" }}
+        >
         {images.map((image, index) => (
           <motion.div
             key={index}
@@ -210,6 +227,7 @@ export default function FlickerCarousel({ images }: FlickerCarouselProps) {
           </motion.div>
         ))}
       </motion.div>
+      </div>
 
       {/* Progress indicator */}
       {images.length > 1 && (
