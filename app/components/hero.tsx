@@ -29,7 +29,6 @@ export default function Hero() {
   // Hero content moves DOWN slowly as you scroll, creating illusion of slower upward scroll
   // This is the key to the parallax effect - moving opposite to scroll direction!
   const yHeadline = useTransform(scrollYProgress, [0, 1], [0, 500]); // Headline moves fastest
-  const yButtons = useTransform(scrollYProgress, [0, 1], [0, 400]); // Buttons middle speed
   const yImage = useTransform(scrollYProgress, [0, 1], [0, 250]); // Image moves slowest
 
   return (

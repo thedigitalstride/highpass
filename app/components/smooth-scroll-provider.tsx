@@ -1,8 +1,15 @@
 'use client';
 
-import { useEffect, useRef, createContext, useContext, ReactNode } from 'react';
+import { useEffect, useRef, createContext, useContext, ReactNode, useState } from 'react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
+
+// Extend Window interface to include lenis property
+declare global {
+  interface Window {
+    lenis?: Lenis;
+  }
+}
 
 // Create context for Lenis instance
 const LenisContext = createContext<Lenis | null>(null);
@@ -12,16 +19,11 @@ export default function SmoothScrollProvider({
 }: {
   children: ReactNode;
 }) {
-  const lenisRef = useRef<Lenis | null>(null);
+  // Lazy initialize Lenis instance
+  const [lenis] = useState<Lenis | null>(() => {
+    if (typeof window === 'undefined') return null;
 
-  useEffect(() => {
-    // Ensure page starts at top before initializing Lenis
-    if (typeof window !== 'undefined') {
-      window.scrollTo(0, 0);
-    }
-
-    // Initialize Lenis
-    const lenis = new Lenis({
+    return new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
@@ -29,38 +31,44 @@ export default function SmoothScrollProvider({
       wheelMultiplier: 1,
       touchMultiplier: 2,
     });
+  });
 
-    lenisRef.current = lenis;
+  const rafRef = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (!lenis) return;
+
+    // Ensure page starts at top before initializing Lenis
+    window.scrollTo(0, 0);
 
     // Make lenis available globally for debugging
-    if (typeof window !== 'undefined') {
-      (window as any).lenis = lenis;
-      
-      // Immediately set scroll to 0 after Lenis takes control
-      requestAnimationFrame(() => {
-        lenis.scrollTo(0, { immediate: true, force: true });
-      });
-    }
+    window.lenis = lenis;
+
+    // Immediately set scroll to 0 after Lenis takes control
+    requestAnimationFrame(() => {
+      lenis.scrollTo(0, { immediate: true, force: true });
+    });
 
     // Request animation frame function
     function raf(time: number) {
+      if (!lenis) return;
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafRef.current = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    rafRef.current = requestAnimationFrame(raf);
 
-    // Cleanup
     return () => {
-      lenis.destroy();
-      if (typeof window !== 'undefined') {
-        delete (window as any).lenis;
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
       }
+      lenis.destroy();
+      delete window.lenis;
     };
-  }, []);
+  }, [lenis]);
 
   return (
-    <LenisContext.Provider value={lenisRef.current}>
+    <LenisContext.Provider value={lenis}>
       {children}
     </LenisContext.Provider>
   );
@@ -73,27 +81,21 @@ export function useLenis() {
 
 // Hook to scroll to element
 export function useLenisScroll() {
-  const lenis = useLenis();
-  
   return (target: string, options?: { offset?: number; duration?: number }) => {
     if (target === '#home' || target === '#') {
       // Scroll to top
-      if (typeof window !== 'undefined') {
-        const lenisInstance = (window as any).lenis as Lenis | undefined;
-        if (lenisInstance) {
-          lenisInstance.scrollTo(0, {
-            duration: options?.duration || 1.2,
-          });
-        }
+      if (typeof window !== 'undefined' && window.lenis) {
+        window.lenis.scrollTo(0, {
+          duration: options?.duration || 1.2,
+        });
       }
       return;
     }
 
     const element = document.querySelector(target);
-    if (element && typeof window !== 'undefined') {
-      const lenisInstance = (window as any).lenis as Lenis | undefined;
-      if (lenisInstance && element instanceof HTMLElement) {
-        lenisInstance.scrollTo(element, {
+    if (element && typeof window !== 'undefined' && window.lenis) {
+      if (element instanceof HTMLElement) {
+        window.lenis.scrollTo(element, {
           offset: options?.offset || -80,
           duration: options?.duration || 1.2,
         });

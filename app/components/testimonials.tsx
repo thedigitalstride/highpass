@@ -40,10 +40,11 @@ export default function Testimonials() {
 
   useEffect(() => {
     if (!emblaApi) return;
-    onSelect();
     emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onSelect);
     return () => {
       emblaApi.off('select', onSelect);
+      emblaApi.off('reInit', onSelect);
     };
   }, [emblaApi, onSelect]);
 
@@ -80,7 +81,7 @@ export default function Testimonials() {
             Client Success Stories
           </h2>
           <p className="text-lg text-white/80 max-w-2xl mx-auto">
-            Hear from those who've transformed their lives through coaching
+            Hear from those who&apos;ve transformed their lives through coaching
           </p>
         </motion.div>
 
@@ -116,7 +117,7 @@ export default function Testimonials() {
 
                     {/* Quote */}
                     <blockquote className="text-lg md:text-xl text-foreground/80 leading-relaxed mb-8">
-                      "{testimonial.quote}"
+                      &ldquo;{testimonial.quote}&rdquo;
                     </blockquote>
 
                     {/* Author */}

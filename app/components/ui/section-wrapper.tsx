@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
 interface SectionWrapperProps {
@@ -24,16 +24,6 @@ export default function SectionWrapper({
     triggerOnce: true,
     threshold: 0.1,
   });
-
-  // Track scroll progress for parallax effect
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end start'],
-  });
-
-  // Transform scroll to move section content up slowly (parallax effect)
-  // Content moves at 20% speed while section slides over at 100%, creating depth
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '-20%']);
 
   const bgColor = background === 'primary' ? 'bg-primary' : 'bg-white';
 
