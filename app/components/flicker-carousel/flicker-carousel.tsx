@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { motion, useMotionValue, animate } from 'framer-motion';
+import { motion, useMotionValue, animate, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import type { CarouselImage } from './content';
 
@@ -15,12 +15,23 @@ export default function FlickerCarousel({
   showProgressIndicator = false
 }: FlickerCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const [containerPadding, setContainerPadding] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(0);
   const [slideWidth, setSlideWidth] = useState(400);
   const x = useMotionValue(0);
   const gap = 24;
+
+  // Parallax scroll tracking
+  const { scrollYProgress } = useScroll({
+    target: carouselRef,
+    offset: ['start end', 'end start']
+  });
+
+  // Transform scroll progress to vertical parallax (top-aligned, moves up 20%)
+  // Start at 0% (top) and move to -20% (up) as page scrolls
+  const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '-20%']);
 
   // Calculate slide width and container padding for alignment
   useEffect(() => {
@@ -180,7 +191,7 @@ export default function FlickerCarousel({
   };
 
   return (
-    <div className="relative w-screen">
+    <div ref={carouselRef} className="relative w-screen">
       <div
         ref={viewportRef}
         className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing"
@@ -214,15 +225,23 @@ export default function FlickerCarousel({
             }}
           >
             <div className="relative w-full aspect-4/3 rounded-2xl overflow-hidden bg-gray-100">
-              <Image
-                src={image.src}
-                alt={image.alt}
-                width={image.width}
-                height={image.height}
-                className="object-cover w-full h-full pointer-events-none"
-                priority={index < 3}
-                draggable={false}
-              />
+              <motion.div
+                className="relative w-full h-full"
+                style={{
+                  y: imageY,
+                  scale: 1.2,
+                }}
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  width={image.width}
+                  height={image.height}
+                  className="object-cover object-top w-full h-full pointer-events-none"
+                  priority={index < 3}
+                  draggable={false}
+                />
+              </motion.div>
             </div>
           </motion.div>
         ))}
