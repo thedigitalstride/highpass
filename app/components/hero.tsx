@@ -26,23 +26,41 @@ export default function Hero() {
 
   return (
     <div ref={ref} id="home" className="relative min-h-screen overflow-hidden">
-      {/* Background Image - covers full hero section including behind nav */}
+      {/* Cloud-like Textured Background - sits behind the image */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `
+            radial-gradient(ellipse 800px 600px at 20% 30%, rgba(210, 215, 210, 0.9) 0%, transparent 50%),
+            radial-gradient(ellipse 900px 700px at 75% 60%, rgba(190, 195, 190, 0.8) 0%, transparent 55%),
+            radial-gradient(ellipse 600px 500px at 50% 80%, rgba(170, 175, 170, 0.7) 0%, transparent 50%),
+            radial-gradient(ellipse 700px 600px at 85% 20%, rgba(200, 205, 200, 0.75) 0%, transparent 50%),
+            radial-gradient(ellipse 500px 400px at 10% 70%, rgba(180, 185, 180, 0.65) 0%, transparent 45%),
+            radial-gradient(ellipse 1000px 800px at 40% 40%, rgba(195, 200, 195, 0.6) 0%, transparent 60%),
+            radial-gradient(ellipse 650px 550px at 60% 25%, rgba(140, 145, 140, 0.5) 0%, transparent 48%),
+            linear-gradient(180deg, #b0b5af 0%, #969995 50%, #7d827c 100%)
+          `,
+          mixBlendMode: 'normal'
+        }}
+      />
+
+      {/* Background Image - takes up 2/3 of screen from right */}
       <motion.div
         style={{ y: yImage }}
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-y-0 -right-30 w-2/3 pointer-events-none z-10"
       >
         <Image
-          src="/coaching-session-sitting.webp"
+          src="/andy-laptop-cutout-cropped.webp"
           alt="Professional Coaching Session"
           fill
-          className="object-cover"
-          sizes="100vw"
+          className="object-contain object-bottom-right scale-x-[-1]"
+          sizes="60vw"
           priority
         />
       </motion.div>
       
       {/* Navigation */}
-      <nav className="relative py-5 z-50 overflow-hidden" style={{ background: 'rgba(158, 163, 159, 0.2)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', mixBlendMode: 'normal' }}>
+      <nav className="relative py-5 z-50 overflow-hidden">
         <div className="container mx-auto flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="text-2xl font-semibold text-white hover:text-secondary-foreground transition-colors cursor-pointer px-2 py-1">
@@ -148,19 +166,19 @@ export default function Hero() {
       </nav>
       
       {/* Content with parallax */}
-      <div className="relative h-[calc(100vh-80px)] flex items-center">
+      <div className="relative h-[calc(100vh-80px)] flex items-center z-20">
         {/* Foreground Content */}
         <div className="relative w-full">
           <div className="container mx-auto px-4">
-            <motion.div 
+            <motion.div
               style={{ y: yHeadline }}
-              className="w-full md:w-3/4 space-y-8 text-center lg:text-left z-10 mx-auto lg:mx-0"
+              className="w-full md:w-3/4 space-y-8 text-center lg:text-left mx-auto lg:mx-0"
             >
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-4xl md:text-5xl lg:text-6xl font-semibold text-white leading-tight"
+                className="text-4xl md:text-5xl lg:text-6xl font-semibold text-white leading-tight -mt-20"
               >
                 Coaching & Consultancy: Purposeful Leadership, Built on Integrity
               </motion.h1>
